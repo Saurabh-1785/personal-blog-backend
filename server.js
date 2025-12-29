@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const app = express();
+app.use(express.json()); // Middleware to parse JSON bodies
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
