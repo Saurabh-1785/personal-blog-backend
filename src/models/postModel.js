@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'A post must have a title.'],
-    trim: true 
+    trim: true
   },
 
   markdownContent: {
@@ -25,4 +25,4 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model('Post', postSchema);
 
-export default Post;
+module.exports = Post;

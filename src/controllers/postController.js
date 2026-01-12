@@ -1,6 +1,5 @@
-
 // Import the Post model we created in the models directory.
-import Post from '../models/postModel.js';
+const Post = require('../models/postModel');
 
 const createPost = async (req, res) => {
   try {
@@ -53,4 +52,58 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-export { createPost, getAllPosts };
+const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching post', error: error.message });
+  }
+};
+
+const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, markdownContent, author } = req.body;
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { title, markdownContent, author },
+      { new: true, runValidators: true } // Return the updated document and run schema validators
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: 'Error updating post', error: error.message });
+  }
+};
+
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedPost = await Post.findByIdAndDelete(id);
+
+    if (!deletedPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.status(200).json({ message: 'Post deleted successfully', post: deletedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting post', error: error.message });
+  }
+};
+
+module.exports = { createPost, getAllPosts, getPostById, updatePost, deletePost };
